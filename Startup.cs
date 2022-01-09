@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using App.ExtendMethods;
+using App.Models;
 using App.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing.Constraints;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -35,6 +37,11 @@ namespace App
             services.AddControllersWithViews();
             services.AddRazorPages();
             //services.AddTransient(typeof(ILogger<>), typeof(ILogger<>));
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                string connectionString = Configuration.GetConnectionString("AppMvcConnectionString");
+                options.UseSqlServer(connectionString);
+            });
 
             services.Configure<RazorViewEngineOptions>(options =>
             {
@@ -132,3 +139,7 @@ namespace App
 // dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design
 
 // dotnet aspnet-codegenerator controller -name  Planet -namespace App.Controllers -outDir Controllers
+
+// dotnet add package Microsoft.EntityFrameworkCore.Design --version 5.0
+// dotnet add package Microsoft.EntityFrameworkCore.SqlServer -v 5.0
+// dotnet add package MySql.Data.EntityFramework -v 5.0

@@ -16,8 +16,7 @@
   //{1} -> ten controller
   //{2} -> ten Area
 
-                options.ViewLocationFormats.Add("/MyView/{1}/{0}" + RazorViewEngine.ViewExtension);
-            });
+      options.ViewLocationFormats.Add("/MyView/{1}/{0}" + RazorViewEngine.ViewExtension);
 
 ## Truyền dữ liệu sang View
 
