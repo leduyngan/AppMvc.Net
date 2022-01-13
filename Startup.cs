@@ -56,6 +56,7 @@ namespace App
             // services.AddSingleton(typeof(ProductService));
             services.AddSingleton(typeof(ProductService), typeof(ProductService));
             services.AddSingleton<PlanetService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

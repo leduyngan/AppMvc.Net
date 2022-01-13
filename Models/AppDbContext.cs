@@ -1,3 +1,4 @@
+using App.Models.Contacts;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Models
@@ -24,5 +25,8 @@ namespace App.Models
             //     }
             // }
         }
+        public DbSet<ContactModel> Contacts { set; get; }
     }
 }
+
+//dotnet aspnet-codegenerator controller -name Contact -namespace App.Areas.Contact.Controllers  -m App.Models.Contacts.ContactModel -udl -dc App.Models.AppDbContext -outDir Areas/Contact/Controllers/
