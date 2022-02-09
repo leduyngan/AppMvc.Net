@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AppMvc.Net.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220109174837_Contact")]
-    partial class Contact
+    [Migration("20220114070842_AddContacts")]
+    partial class AddContacts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

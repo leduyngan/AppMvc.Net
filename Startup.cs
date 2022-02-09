@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +36,11 @@ namespace App
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            var mailSetting = Configuration.GetSection("MailSettings");
+            services.Configure<MailSettings>(mailSetting);
+            services.AddSingleton<IEmailSender, SendMailService>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
             //services.AddTransient(typeof(ILogger<>), typeof(ILogger<>));
@@ -42,7 +49,61 @@ namespace App
                 string connectionString = Configuration.GetConnectionString("AppMvcConnectionString");
                 options.UseSqlServer(connectionString);
             });
+            services.AddIdentity<AppUser, IdentityRole>()
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
+            // services.AddDefaultIdentity<AppUser>()
+            // .AddEntityFrameworkStores<AppDbContext>()
+            // .AddDefaultTokenProviders();
 
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Thiết lập về Password
+                options.Password.RequireDigit = false; // Không bắt phải có số
+                options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
+                options.Password.RequireNonAlphanumeric = false; // Không bắt ký tự đặc biệt
+                options.Password.RequireUppercase = false; // Không bắt buộc chữ in
+                options.Password.RequiredLength = 3; // Số ký tự tối thiểu của password
+                options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
+
+                // Cấu hình Lockout - khóa user
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // Khóa 5 phút
+                options.Lockout.MaxFailedAccessAttempts = 3; // Thất bại 2 lầ thì khóa
+                options.Lockout.AllowedForNewUsers = true;
+
+                // Cấu hình về User.
+                options.User.AllowedUserNameCharacters = // các ký tự đặt tên user
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;  // Email là duy nhất
+
+                // Cấu hình đăng nhập.
+                options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
+                options.SignIn.RequireConfirmedPhoneNumber = false;
+                options.SignIn.RequireConfirmedAccount = true;   // Xác thực số điện thoại
+
+            });
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/login";
+                options.LogoutPath = "/logout";
+                options.AccessDeniedPath = "/khongduoctruycap.html";
+            });
+            services.AddAuthentication()
+                    .AddGoogle(options =>
+                    {
+                        var gconfig = Configuration.GetSection("Authentication:Google");
+                        options.ClientId = gconfig["ClientId"];
+                        options.ClientSecret = gconfig["ClientSecret"];
+                        //https://localhost:5001/signin-google
+                        options.CallbackPath = "/dang-nhap-tu-google";
+                    })
+                    .AddFacebook(options =>
+                    {
+                        var fconfig = Configuration.GetSection("Authentication:Facebook");
+                        options.AppId = fconfig["AppId"];
+                        options.AppSecret = fconfig["AppSecret"];
+                        options.CallbackPath = "/dang-nhap-tu-facebook";
+                    });
             services.Configure<RazorViewEngineOptions>(options =>
             {
                 //{0} -> ten Action
@@ -51,11 +112,9 @@ namespace App
 
                 options.ViewLocationFormats.Add("/MyView/{1}/{0}" + RazorViewEngine.ViewExtension);
             });
-            // services.AddSingleton<ProductService>();
-            // services.AddSingleton<ProductService, ProductService>();
-            // services.AddSingleton(typeof(ProductService));
             services.AddSingleton(typeof(ProductService), typeof(ProductService));
             services.AddSingleton<PlanetService>();
+
 
         }
 

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace AppMvc.Net.Migrations
 {
-    public partial class Contact : Migration
+    public partial class AddContacts : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

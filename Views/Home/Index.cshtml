@@ -2,48 +2,48 @@
     ViewData["Title"] = "Home Page";
 
 }
-<partial name="_AlertMessage" />
+<partial name="_StatusMessage" model=@ViewData["StatusMessage"] />
 <div class="text-center">
     <h1 class="display-4">Xin Chào</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 @* <p>
     @Url.ActionLink()
-</p>
-<p>
+    </p> *@
+@*<p>
     @Url.Action()
-</p>
-<p>
+    </p>
+    <p>
     @Url.Action("Privacy", new{id= 123, name = "ngan"})
-</p>
-<p>
+    </p>
+    <p>
     @Url.Action("Jupiter", "planet")
-</p>
-<p>
+    </p>
+    <p>
     @Url.Action("planetInfo", "planet",new{id=2})
-</p>
-<p>
+    </p>
+    <p>
     @Url.Action("Index", "Product", new{area="ProductManage", id= 3})
-</p>
-<p>
+    </p>
+    <p>
     @Url.RouteUrl("default", new{Action= "HellowView", Controller = "Home", id = 123, name = "Ngan"})
-</p>
-<p>
+    </p>
+    <p>
     @Url.RouteUrl("Mercury2")
-</p>
+    </p>
 
-<a asp-action="PlanetInfo" asp-controller="Planet" asp-route-id="3">Vi du</a>
-<hr>
-<a asp-action="Index" asp-controller="Home" asp-route-id="1" asp-route-name="Ngan" asp-route-abc="asd">Vi du2</a>
+    <a asp-action="PlanetInfo" asp-controller="Planet" asp-route-id="3">Vi du</a>
+    <hr>
+    <a asp-action="Index" asp-controller="Home" asp-route-id="1" asp-route-name="Ngan" asp-route-abc="asd">Vi du2</a>
 
-<hr>
-@{
+    <hr>
+    @{
     var routeData = new Dictionary<string, string>(){
-{"name","Ngang"},
-{"abc","xyz"},
-{"id","1234"}
-};
-}
-<a asp-action="Index" asp-controller="Home" asp-all-route-data="@routeData">Vi du3</a>
-<hr>
-<a asp-action="Index" asp-controller="Product" asp-area="ProductManage" asp-all-route-data="@routeData">Vi du4</a> *@
+    {"name","Ngang"},
+    {"abc","xyz"},
+    {"id","1234"}
+    };
+    }
+    <a asp-action="Index" asp-controller="Home" asp-all-route-data="@routeData">Vi du3</a>
+    <hr>
+    <a asp-action="Index" asp-controller="Product" asp-area="ProductManage" asp-all-route-data="@routeData">Vi du4</a> *@

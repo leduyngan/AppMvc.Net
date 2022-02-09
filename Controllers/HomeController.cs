@@ -17,10 +17,14 @@ namespace App.Controllers
         {
             _logger = logger;
         }
-
-        public string HiHome() => "Xin chào các bạn";
-        public IActionResult Index()
+        public class StatusMessage
         {
+            public string Message { get; set; }
+        }
+        public string HiHome() => "Xin chào các bạn";
+        public IActionResult Index(StatusMessage mesage = null)
+        {
+            ViewData["StatusMessage"] = mesage.Message;
             return View();
         }
 

@@ -1,0 +1,95 @@
+@using Microsoft.AspNetCore.Identity
+@using App.Areas.Identity.Models.AccountViewModels
+@inject SignInManager<AppUser> _signInManager
+@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+    var thongBao = TempData["ErrorMessage"];
+}
+
+
+<h1>@ViewData["Title"]</h1>
+@if (TempData.ContainsKey("ErrorMessage"))
+{
+    <partial name="/Areas/Identity/Pages/Account/_StatusMessage.cshtml" model="thongBao" />
+}
+<div class="row">
+    <div class="col-md-4">
+        <section>
+            <form id="account" method="post" asp-action="Login" asp-controller="account" asp-area="Identity">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="UserNameOrEmail"></label>
+                    <input asp-for="UserNameOrEmail" class="form-control" />
+                    <span asp-validation-for="UserNameOrEmail" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label asp-for="RememberMe">
+                            <input asp-for="RememberMe" />
+                            @Html.DisplayNameFor(m => m.RememberMe)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <a id="forgot-password" asp-area="Identity" asp-controller="account"
+                            asp-action="ForgotPassword">Quên Mật Khẩu?</a>
+                    </p>
+                    <p>
+                        <a asp-action="Register" asp-controller="account" asp-area="Identity">Đăng ký tài khoản mơi</a>
+                    </p>
+                    <p>
+                        <a id="resend-confirmation" asp-action="ResendEmailConfirmation" asp-controller="account"
+                            asp-area="Identity">Gửi lại email xác thực</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <section>
+            <h4>Sử dụng dịch vụ ngoài</h4>
+            <hr />
+            @{
+                var externalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+                if ((externalLogins?.Count ?? 0) == 0)
+                {
+                    <div>
+                        <p>
+                            Chưa cấu hình
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <form id="external-account" asp-area="Identity" asp-controller="account" asp-action="ExternalLogin"
+                asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in externalLogins)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name"
+                                title="Sử dụng @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+<partial name="_ValidationScriptsPartial" />
+}
