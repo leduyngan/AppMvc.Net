@@ -1,6 +1,7 @@
 using App.Models.Contacts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using App.Models.Blog;
 
 namespace App.Models
 {
@@ -25,8 +26,13 @@ namespace App.Models
                     entityType.SetTableName(tableName.Substring(6));
                 }
             }
+            modelBuilder.Entity<Category>(entity =>
+            {
+                entity.HasIndex(c => c.Slug);
+            });
         }
         public DbSet<ContactModel> Contacts { set; get; }
+        public DbSet<Category> Categories { get; set; }
     }
 }
 
