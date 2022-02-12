@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using App.Areas.Identity.UserViewModel;
+using App.Data;
 using App.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +16,7 @@ using static App.Areas.Identity.UserViewModel.IndexUserViewModel;
 namespace App.Areas.Identity.Controllers
 {
 
-    [Authorize]
+    [Authorize(Roles = RoleName.Administrator)]
     [Area("Identity")]
     [Route("User/[action]")]
     public class UserController : Controller

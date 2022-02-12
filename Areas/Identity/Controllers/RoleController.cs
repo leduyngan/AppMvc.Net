@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using App.Areas.Identity.RoleViewModels;
+using App.Data;
 using App.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.Areas.Identity.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = RoleName.Administrator)]
     [Area("Identity")]
     [Route("Role/[action]")]
     public class RoleController : Controller

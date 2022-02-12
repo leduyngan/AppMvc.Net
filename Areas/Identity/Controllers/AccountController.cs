@@ -384,13 +384,6 @@ namespace App.Areas.Identity.Controllers
             return View();
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> ConfirmEmailChane(string userId, string email, string code)
         {
             if (userId == null || email == null || code == null)
@@ -717,6 +710,12 @@ namespace App.Areas.Identity.Controllers
                 ModelState.AddModelError(string.Empty, "Sai mã phục hồi.");
                 return View(model);
             }
+        }
+        [Route("/khongduoctruycap.html")]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

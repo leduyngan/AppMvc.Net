@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using App.Data;
 using App.ExtendMethods;
 using App.Models;
 using App.Service;
@@ -111,6 +112,14 @@ namespace App
                 //{2} -> ten Area
 
                 options.ViewLocationFormats.Add("/MyView/{1}/{0}" + RazorViewEngine.ViewExtension);
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("ShowAdminMenu", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.RequireRole(RoleName.Administrator);
+                });
             });
             services.AddSingleton(typeof(ProductService), typeof(ProductService));
             services.AddSingleton<PlanetService>();
