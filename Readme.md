@@ -34,7 +34,7 @@
 
 ```
 dotnet aspnet-codegenerator area product
-
+$ dotnet add package Bogus
 
 
 

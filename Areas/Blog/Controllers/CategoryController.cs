@@ -167,17 +167,60 @@ namespace App.Areas.Blog.Controllers
             {
                 return NotFound();
             }
-            if (category.ParentCategoryId == category.Id)
+
+            var pCategory = await _context.Categories.FindAsync(category.ParentCategoryId);
+
+            if (category.ParentCategoryId == category.Id || category.Id == pCategory.ParentCategoryId)
             {
                 ModelState.AddModelError(string.Empty, "Phải chọn danh mục cha khác");
             }
-            if (ModelState.IsValid)
+
+            // kiem tra thiet lap muc tra phu hop
+            bool canUpdate = true;
+            if (canUpdate && category.ParentCategoryId != null)
+            {
+                var childCates = (from c in _context.Categories select c)
+                                .Include(c => c.CategoryChildren)
+                                .ToList()
+                                .Where(c => c.ParentCategoryId == category.Id);
+
+
+                // func check Id
+                Func<List<Category>, bool> checkCateIds = null;
+                checkCateIds = (cates) =>
+                {
+                    foreach (var cate in cates)
+                    {
+                        Console.WriteLine(cate.Title);
+                        if (cate.Id == category.ParentCategoryId)
+                        {
+                            canUpdate = false;
+                            ModelState.AddModelError(string.Empty, "Phải chọn danh mục cha khác");
+                            return true;
+                        }
+                        if (cate.CategoryChildren != null)
+                        {
+                            return checkCateIds(cate.CategoryChildren.ToList());
+                        }
+                    }
+                    return false;
+
+                };
+                // end func
+                checkCateIds(childCates.ToList());
+            }
+
+
+
+            if (ModelState.IsValid && canUpdate)
             {
                 try
                 {
                     if (category.ParentCategoryId == -1)
                         category.ParentCategoryId = null;
-                    _context.Update(category);
+                    // _context.Update(category);
+                    var dtc = _context.Categories.FirstOrDefault(c => c.Id == id);
+                    _context.Entry(dtc).State = EntityState.Detached;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
