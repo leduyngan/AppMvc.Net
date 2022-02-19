@@ -1,11 +1,11 @@
 @model IEnumerable<App.Models.Blog.Category>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Chuyên mục bài viết";
 }
 
-<h1>Index</h1>
-
+<h1>@ViewData["Title"]</h1>
+<partial name="_StatusMessage" />
 <p>
     <a asp-action="Create" class="btn btn-primary btn-sm">Tạo chuyên mục</a>
 </p>

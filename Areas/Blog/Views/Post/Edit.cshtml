@@ -65,3 +65,10 @@
 </script>
 <partial name="_ValidationScriptsPartial" />
 }
+
+@{
+    var summernote = new Summernote("#Description");
+    var summernoteContent = new Summernote("#Content");
+}
+<partial name="_Summernote" model="@summernote" />
+<partial name="_Summernote" model="@summernoteContent" />

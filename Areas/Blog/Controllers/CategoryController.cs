@@ -23,7 +23,8 @@ namespace App.Areas.Blog.Controllers
         {
             _context = context;
         }
-
+        [TempData]
+        public string StatusMessage { set; get; }
         // GET: Category
         public async Task<IActionResult> Index()
         {
@@ -167,10 +168,7 @@ namespace App.Areas.Blog.Controllers
             {
                 return NotFound();
             }
-
-            var pCategory = await _context.Categories.FindAsync(category.ParentCategoryId);
-
-            if (category.ParentCategoryId == category.Id || category.Id == pCategory.ParentCategoryId)
+            if (category.ParentCategoryId == category.Id)
             {
                 ModelState.AddModelError(string.Empty, "Phải chọn danh mục cha khác");
             }
@@ -210,8 +208,6 @@ namespace App.Areas.Blog.Controllers
                 checkCateIds(childCates.ToList());
             }
 
-
-
             if (ModelState.IsValid && canUpdate)
             {
                 try
@@ -220,7 +216,18 @@ namespace App.Areas.Blog.Controllers
                         category.ParentCategoryId = null;
                     // _context.Update(category);
                     var dtc = _context.Categories.FirstOrDefault(c => c.Id == id);
-                    _context.Entry(dtc).State = EntityState.Detached;
+                    if (dtc == null)
+                    {
+                        return NotFound();
+                    }
+                    dtc.ParentCategoryId = category.ParentCategoryId;
+                    dtc.Title = category.Title;
+                    dtc.Description = category.Description;
+                    dtc.Slug = dtc.Slug;
+
+                    _context.Update(dtc);
+                    // _context.Entry(dtc).State = EntityState.Detached;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -234,6 +241,7 @@ namespace App.Areas.Blog.Controllers
                         throw;
                     }
                 }
+                StatusMessage = "Vừa cập nhật chuyên mục";
                 return RedirectToAction(nameof(Index));
             }
             var qr = (from c in _context.Categories select c)

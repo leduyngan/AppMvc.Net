@@ -43,3 +43,8 @@
 <div>
     <a asp-action="Index">Danh sách chuyên mục</a>
 </div>
+@{
+    var summernote = new Summernote("#Description");
+
+}
+<partial name="_Summernote" model="@summernote" />

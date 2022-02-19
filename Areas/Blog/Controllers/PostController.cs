@@ -229,11 +229,6 @@ namespace App.Areas.Blog.Controllers
                         });
                     }
 
-
-
-
-
-
                     _context.Update(postUpdate);
                     await _context.SaveChangesAsync();
                 }
